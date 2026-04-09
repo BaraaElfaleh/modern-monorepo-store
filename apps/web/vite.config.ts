@@ -1,16 +1,13 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import { tanstackRouter } from '@tanstack/router-plugin/vite' 
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import { tanstackRouter } from "@tanstack/router-plugin/vite";
 
 export default defineConfig({
-  plugins: [
-    tanstackRouter(), 
-    react()
-  ],
+  plugins: [tanstackRouter(), react()],
   server: {
-    port: 3000, 
+    port: 3000,
   },
   css: {
-    postcss: '../../postcss.config.js',
+    postcss: "../../postcss.config.js",
   },
-})
+});
