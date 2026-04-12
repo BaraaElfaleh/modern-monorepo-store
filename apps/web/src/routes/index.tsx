@@ -5,8 +5,7 @@ import { ProductList } from '../modules/products/views/ProductList'; // تأكد
 export const Route = createFileRoute('/')({
   component: () => (
     <ProductsProvider>
-      <div className="p-10">
-        <h1 className="text-3xl font-bold text-cyan-400 mb-6">Nexus Store</h1>
+      <div className="p-10">       
         <ProductList />
       </div>
     </ProductsProvider>

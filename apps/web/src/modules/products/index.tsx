@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, type ReactNode } from 'react';
+import { createContext, useContext,type ReactNode } from 'react';
 import type { Product } from './entity/entity';
 import { useProducts } from './hooks/useProducts';
 
@@ -11,10 +11,10 @@ interface ProductsContextType {
 const ProductsContext = createContext<ProductsContextType | undefined>(undefined);
 
 export const ProductsProvider = ({ children }: { children: ReactNode }) => {
-  const { products, loading, error } = useProducts();
+  const { products, isLoading, error } = useProducts();
 
   return (
-    <ProductsContext.Provider value={{ products, isLoading: loading, error }}>
+    <ProductsContext.Provider value={{ products, isLoading: isLoading, error }}>
       {children}
     </ProductsContext.Provider>
   );
