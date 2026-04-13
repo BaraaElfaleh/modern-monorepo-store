@@ -1,133 +1,147 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, ShoppingCart, Menu, X, Sun, Moon, Heart, User } from "lucide-react";
+import { Button, cn } from "../../../../packages/ui/src"; 
 import { CartDrawer } from "../modules/cart";
 
 export const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [dark, setDark] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
+  const [isDark, setIsDark] = useState(false);
+
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+    if (isDark) {
+      root.classList.add("dark");
+    } else {
+      root.classList.remove("dark");
+    }
+  }, [isDark]);
 
   return (
-    <div className={dark ? "dark" : ""}>
-      <nav className="bg-white dark:bg-gray-950 border-b border-gray-100 dark:border-gray-800 sticky top-0 z-50 transition-colors duration-300">
+    <nav className="bg-background border-b border-text/10 sticky top-0 z-50 transition-all duration-500 ease-in-out">
+      
+      {/* Top Bar - انسيابي أكثر */}
+      <div className="bg-primary text-white text-[10px] uppercase tracking-widest text-center py-2 hidden md:block font-semibold">
+        Free shipping on orders over $50 · Use code <span className="underline decoration-accent underline-offset-4">NEXUS10</span>
+      </div>
 
-        <div className="bg-gray-950 dark:bg-gray-900 text-gray-400 text-xs text-center py-1.5 hidden md:block">
-          Free shipping on orders over $50 &nbsp;·&nbsp; Use code <span className="text-white font-medium">NEXUS10</span> for 10% off
-        </div>
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="flex justify-between items-center h-20"> {/* زدنا الارتفاع للراحة البصرية */}
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-
-            <a href="#" className="text-xl font-bold tracking-tight text-gray-950 dark:text-white">
-              Nexus<span className="text-blue-600">.</span>
+          {/* Logo Section */}
+          <div className="flex items-center gap-8">
+            <a href="#" className="text-2xl font-black tracking-tighter text-text hover:opacity-80 transition-opacity">
+              NEXUS<span className="text-primary">.</span>
             </a>
 
-            <div className="hidden md:flex items-center gap-7">
-              <a href="#" className="text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition font-medium">Home</a>
-              <a href="#" className="text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition font-medium">Products</a>
-              <a href="#" className="text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition font-medium">
-                Offers
-                <span className="ml-1.5 bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">Hot</span>
-              </a>
-              <a href="#" className="text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition font-medium">Contact</a>
-            </div>
-
-            <div className="hidden md:flex items-center gap-2">
-              <div className={`relative flex items-center transition-all duration-300 ${searchOpen ? "w-56" : "w-9"}`}>
-                {searchOpen && (
-                  <input
-                    autoFocus
-                    type="text"
-                    placeholder="Search products..."
-                    className="w-full border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-full py-1.5 pl-4 pr-9 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 dark:text-white"
-                  />
-                )}
-                <button
-                  onClick={() => setSearchOpen(!searchOpen)}
-                  className="absolute right-0 p-2 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition"
+            {/* Main Nav Links - مسافات مدروسة */}
+            <div className="hidden lg:flex items-center gap-8">
+              {["Home", "Products", "Contact"].map((link) => (
+                <a 
+                  key={link} 
+                  className="text-sm font-medium text-text-muted hover:text-primary transition-all relative group"
                 >
-                  {searchOpen ? <X className="w-4 h-4" /> : <Search className="w-4 h-4" />}
-                </button>
-              </div>
+                  {link}
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full" />
+                </a>
+              ))}
+            </div>
+          </div>
 
-              <button
-                onClick={() => setDark(!dark)}
-                className="p-2 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition"
-              >
-                {dark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-              </button>
+          {/* Action Icons Section */}
+          <div className="flex items-center gap-3 md:gap-4">
+            
+            {/* Search - Dynamic Width */}
+            <div className={cn(
+              "relative flex items-center bg-surface rounded-full transition-all duration-300 border border-transparent focus-within:border-primary/30",
+              searchOpen ? "w-64 px-3" : "w-10 h-10 justify-center"
+            )}>
+              <Search 
+                size={18} 
+                className={cn("text-text-muted cursor-pointer hover:text-primary transition-colors", searchOpen && "mr-2")} 
+                onClick={() => setSearchOpen(!searchOpen)}
+              />
+              {searchOpen && (
+                <input
+                  autoFocus
+                  placeholder="Search products..."
+                  className="w-full bg-transparent text-text text-sm outline-none placeholder:text-text-muted/50"
+                />
+              )}
+              {searchOpen && <X size={14} className="text-text-muted cursor-pointer" onClick={() => setSearchOpen(false)} />}
+            </div>
 
-              <button className="relative p-2 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">
-                <Heart className="w-4 h-4" />
-              </button>
+            {/* Theme Toggle - Animated */}
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => setIsDark(!isDark)}
+              className="rounded-full hover:bg-primary/10 group"
+            >
+              {isDark ? (
+                <Sun size={20} className="text-yellow-400 rotate-0 transition-transform duration-500 group-hover:rotate-90" />
+              ) : (
+                <Moon size={20} className="text-text-muted rotate-0 transition-transform duration-500 group-hover:-rotate-12" />
+              )}
+            </Button>
 
-              <button
-                onClick={() => setCartOpen(true)}
-                className="relative p-2 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition"
-              >
-                <ShoppingCart className="w-4 h-4" />
-                <span className="absolute top-0.5 right-0.5 bg-blue-600 text-white text-[10px] rounded-full w-3.5 h-3.5 flex items-center justify-center">
-                  3
-                </span>
-              </button>
+            <div className="h-6 w-[1px] bg-text/10 mx-1 hidden md:block" /> {/* Divider */}
 
-              <button className="p-2 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">
-                <User className="w-4 h-4" />
-              </button>
+            <Button variant="ghost" size="icon" className="hidden md:flex rounded-full text-text-muted hover:text-primary">
+              <User size={20} />
+            </Button>
 
-              <a href="#" className="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-1.5 rounded-full transition ml-1">
-                Sign in
+            <Button variant="ghost" size="icon" className="hidden md:flex rounded-full text-text-muted hover:text-primary">
+              <Heart size={20} />
+            </Button>
+
+            {/* Cart with Badge */}
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="relative rounded-full text-text-muted hover:text-primary" 
+              onClick={() => setCartOpen(true)}
+            >
+              <ShoppingCart size={20} />
+              <span className="absolute -top-0.5 -right-0.5 bg-accent text-white text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full ring-2 ring-background">
+                3
+              </span>
+            </Button>
+
+            {/* Mobile Menu Toggle */}
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="lg:hidden rounded-full" 
+              onClick={() => setMobileOpen(!mobileOpen)}
+            >
+              {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+            </Button>
+          </div>
+
+        </div>
+      </div>
+
+      {/* Mobile Menu - Premium Look */}
+      {mobileOpen && (
+        <div className="lg:hidden border-t border-text/10 bg-background/95 backdrop-blur-md absolute w-full px-6 py-8 space-y-6 shadow-xl animate-in fade-in slide-in-from-top-4">
+          <div className="space-y-4">
+            {["Home", "Products", "Offers", "Contact"].map((item) => (
+              <a key={item} className="block text-lg font-semibold text-text hover:text-primary transition-colors">
+                {item}
               </a>
-            </div>
-
-            <div className="md:hidden flex items-center gap-1">
-              <button onClick={() => setDark(!dark)} className="p-2 text-gray-500 dark:text-gray-400">
-                {dark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-              </button>
-              <button
-                onClick={() => setCartOpen(true)}
-                className="relative p-2 text-gray-500 dark:text-gray-400"
-              >
-                <ShoppingCart className="w-4 h-4" />
-                <span className="absolute top-0.5 right-0.5 bg-blue-600 text-white text-[10px] rounded-full w-3.5 h-3.5 flex items-center justify-center">
-                  3
-                </span>
-              </button>
-              <button onClick={() => setMobileOpen(!mobileOpen)} className="p-2 text-gray-600 dark:text-gray-300">
-                {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-              </button>
-            </div>
-
+            ))}
+          </div>
+          <div className="flex flex-col gap-3 pt-4">
+            <Button variant="primary" className="w-full py-6 text-base">Sign In</Button>
+            <Button variant="outline" className="w-full py-6 text-base">Create Account</Button>
           </div>
         </div>
-
-        {mobileOpen && (
-          <div className="md:hidden border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-950 px-4 py-4 space-y-1">
-            <div className="relative mb-3">
-              <input
-                type="text"
-                placeholder="Search products..."
-                className="w-full border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-full py-2 px-4 pl-9 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 dark:text-white"
-              />
-              <Search className="absolute left-3 top-2.5 text-gray-400 w-4 h-4" />
-            </div>
-            <a href="#" className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 py-2.5 border-b border-gray-100 dark:border-gray-800">Home</a>
-            <a href="#" className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 py-2.5 border-b border-gray-100 dark:border-gray-800">Products</a>
-            <a href="#" className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 py-2.5 border-b border-gray-100 dark:border-gray-800">
-              Offers <span className="bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">Hot</span>
-            </a>
-            <a href="#" className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 py-2.5 border-b border-gray-100 dark:border-gray-800">Contact</a>
-            <div className="flex gap-2 pt-2">
-              <a href="#" className="flex-1 text-center border border-blue-600 text-blue-600 text-sm px-4 py-2 rounded-full hover:bg-blue-50 dark:hover:bg-blue-950 transition">Sign in</a>
-              <a href="#" className="flex-1 text-center bg-blue-600 text-white text-sm px-4 py-2 rounded-full hover:bg-blue-700 transition">Sign up</a>
-            </div>
-          </div>
-        )}
-
-      </nav>
+      )}
 
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
-    </div>
+    </nav>
   );
 };

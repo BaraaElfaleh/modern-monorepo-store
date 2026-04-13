@@ -1,1 +1,36 @@
 @import "tailwindcss";
+
+@theme {
+  /* نربط مفاتيح Tailwind بمتغيرات CSS */
+  --color-primary: var(--primary);
+  --color-accent: var(--accent);
+
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+
+  --color-text: var(--text-main);
+  --color-text-muted: var(--text-muted);
+}
+
+/* تعريف القيم للـ Light Mode (افتراضي) */
+:root {
+  --primary: #4F46E5;
+  --accent: #F97373;
+
+  --background: #F8FAFC;
+  --surface: #334155;
+
+  --text-main: #1E293B;
+  --text-muted: #64748B;
+}
+
+/* تعريف القيم للـ Dark Mode */
+/* ملاحظة: استخدمنا نفس أسماء المتغيرات لكن بقيمك الخاصة بالـ Dark */
+.dark {
+  --background: #0F172A;
+  --surface: #1E293B;
+  --text-main: #F1F5F9;
+  --text-muted: #94A3B8;
+  
+  /* إذا لم تحدد الـ primary والـ accent هنا، سيأخذون قيم الـ :root تلقائياً */
+}
