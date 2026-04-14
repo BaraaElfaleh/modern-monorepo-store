@@ -1,4 +1,4 @@
-import { ProductAdapter } from '../adapter/adapter';
+import { ProductAdapter } from '../adapters/adapter';
 import type { DummyJSONResponse } from '../dto/dto';
 
 export const ProductService = {

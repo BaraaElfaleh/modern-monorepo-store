@@ -1,5 +1,5 @@
-import { useProductsContext } from '../index';
-import { Card } from '../../../components/Card';
+import { useProductsContext } from '../context';
+import { Card } from './Card';
 import { Pagination } from '../../../components/Pagination';
 import { useState } from 'react';
 

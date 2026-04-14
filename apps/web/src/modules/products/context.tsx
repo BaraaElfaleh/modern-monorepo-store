@@ -1,5 +1,5 @@
 import { createContext, useContext,type ReactNode } from 'react';
-import type { Product } from './entity/entity';
+import type { Product } from './entities/entitiy';
 import { useProducts } from './hooks/useProducts';
 
 interface ProductsContextType {

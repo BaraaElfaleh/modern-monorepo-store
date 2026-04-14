@@ -1,5 +1,5 @@
 import type { ProductRemoteDTO } from '../dto/dto';
-import type { Product } from '../entity/entity';
+import type { Product } from '../entities/entitiy';
 
 export const ProductAdapter = {
   toEntity(dto: ProductRemoteDTO): Product {

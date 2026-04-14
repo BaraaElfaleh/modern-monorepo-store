@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { ProductsProvider } from '../modules/products/index'; 
+import { ProductsProvider } from '../modules/products/context'; 
 import { ProductList } from '../modules/products/views/ProductList'; // تأكد من اسم المجلد seens أو views
 
 export const Route = createFileRoute('/')({
