@@ -53,15 +53,21 @@ export const Pagination = ({
 
   const pages = createPages();
 
+  // 🎨 THEMED BUTTON
   const btnClass = (active: boolean) =>
-    `relative border-t-2 transition h-10 sm:h-12 w-8 sm:w-12 text-xs sm:text-sm ${
+    `relative border-t-2 transition h-10 sm:h-12 w-8 sm:w-12 text-xs sm:text-sm
+    border-transparent
+    ${
       active
-        ? "text-blue-600 font-semibold border-blue-600"
-        : "text-gray-600 hover:text-black hover:border-blue-400 border-t-transparent"
-    }`;
+        ? "text-primary border-primary font-semibold"
+        : "text-text-muted hover:text-text hover:border-primary/40"
+    }
+    dark:text-gray-300 dark:hover:text-white`;
 
   return (
-    <div className="w-full flex items-center justify-between border-t border-gray-300 bg-white text-sm">
+    <div className="w-full flex items-center justify-between border-t border-border bg-background text-sm transition-colors">
+
+      {/* Previous */}
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
@@ -71,10 +77,14 @@ export const Pagination = ({
         Previous
       </button>
 
+      {/* Pages */}
       <div className="flex items-center">
         {pages.map((p, i) =>
           p === "..." ? (
-            <span key={i} className="text-gray-400 w-6 sm:w-8 text-center text-xs sm:text-sm">
+            <span
+              key={i}
+              className="text-text-muted w-6 sm:w-8 text-center text-xs sm:text-sm"
+            >
               ...
             </span>
           ) : (
@@ -89,6 +99,7 @@ export const Pagination = ({
         )}
       </div>
 
+      {/* Next */}
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}

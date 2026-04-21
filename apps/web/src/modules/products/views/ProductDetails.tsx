@@ -1,14 +1,14 @@
 import { Route } from '../../../routes/products/$id';
 import { useEffect, useState } from 'react';
 import { ProductService } from '../services/service';
-import type { Product } from '../entities/entitiy';
+import type { ProductItem } from '../entities/entitiy';
 
 import { ShoppingCart, Heart, Tag, Star } from 'lucide-react';
 
 export const ProductDetails = () => {
   const { id } = Route.useParams();
 
-  const [product, setProduct] = useState<Product | null>(null);
+  const [product, setProduct] = useState<ProductItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -42,7 +42,7 @@ export const ProductDetails = () => {
           <img
             src={product.imageUrl}
             alt={product.name}
-            className="w-full max-h-[500px] object-contain hover:scale-105 transition duration-300"
+            className="w-full max-h-125 object-contain hover:scale-105 transition duration-300"
           />
         </div>
 

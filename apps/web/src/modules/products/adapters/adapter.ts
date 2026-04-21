@@ -1,20 +1,19 @@
-import type { ProductRemoteDTO } from '../dto/dto';
-import type { Product } from '../entities/entitiy';
+import type { Product} from '../dto/dto';
+import type { ProductItem } from '../entities/entitiy';
 
 export const ProductAdapter = {
-  toEntity(dto: ProductRemoteDTO): Product {
+  toEntity(dto: Product):ProductItem {
     return {
       id: String(dto.id),
       name: dto.title,
       price: dto.price,
       description: dto.description,
-      // نستخدم thumbnail لأنها محملة مسبقاً وسريعة جداً في العرض
       imageUrl: dto.thumbnail, 
       category: dto.category,
     };
   },
 
-  toEntityList(dtos: ProductRemoteDTO[]): Product[] {
+  toEntityList(dtos: Product[]): ProductItem[] {
     return (dtos || []).map((dto) => this.toEntity(dto));
   }
 };

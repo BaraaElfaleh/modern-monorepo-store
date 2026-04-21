@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import type { Product } from '../entities/entitiy';
+import type { ProductItem } from '../entities/entitiy';
 import { ProductService } from '../services/service';
 
 export const useProducts = () => {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<ProductItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

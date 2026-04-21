@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+/* 1. الطبقة الأولى: الألوان الخام (Primitives) */
+/* هذه الألوان لا تتغير بتغير الثيم، هي فقط "مخزن" للألوان */
+@layer base {
+  :root {
+    --brand-500: #3b82f6; /* اللون الأساسي للمتجر */
+    --brand-600: #2563eb;
+    
+    --success: #22c55e;
+    --warning: #f59e0b;
+    --error: #ef4444;
+
+    --neutral-50: #f9fafb;
+    --neutral-900: #111827;
+  }
+}
+
+/* 2. الطبقة الثانية: الربط مع Tailwind v4 (Semantic Tokens) */
+/* هنا السحر! نحن نربط المتغيرات بأسماء تيلويند الرسمية */
+@theme {
+  /* ألوان البراند */
+  --color-primary: var(--brand-500);
+  --color-primary-hover: var(--brand-600);
+  
+  /* ألوان الواجهة (Surface) */
+  --color-background: var(--neutral-50);
+  --color-surface: #ffffff;
+  --color-border: #e5e7eb;
+  
+  /* ألوان النصوص */
+  --color-text-main: var(--neutral-900);
+  --color-text-muted: #6b7280;
+
+  /* الخطوط (Typography) */
+  --font-sans: "Inter", ui-sans-serif, system-ui;
+  
+  /* الزوايا (Border Radius) */
+  --radius-brand: 0.75rem; /* زوايا لطيفة للمتجر */
+}
+
+/* 3. نظام الـ Dark Mode (اختياري حالياً وسهل التفعيل لاحقاً) */
+@variant dark (&:where(.dark, .dark *));

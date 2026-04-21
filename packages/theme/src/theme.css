@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+/* -------------------------------------------------------------------------- */
+/* 1. Theme Tokens (Mapped to your custom variables)                          */
+/* -------------------------------------------------------------------------- */
+@theme {
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-fg);
+  --color-secondary: var(--secondary);
+  
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-border: var(--border);
+
+  --color-text-main: var(--text-main);
+  --color-text-muted: var(--text-muted);
+
+  --color-accent: var(--accent);
+  
+  --radius-card: var(--radius-card);
+  --radius-button: var(--radius-button);
+
+  --shadow-soft: var(--shadow-soft);
+  --shadow-elevated: var(--shadow-elevated);
+
+  --transition-base: var(--transition-base);
+  --transition-fast: var(--transition-fast);
+}
+
+/* -------------------------------------------------------------------------- */
+/* 2. Base Variables (Light Theme - Boho Focused)                             */
+/* -------------------------------------------------------------------------- */
+:root {
+  /* Brand Colors */
+  --primary: #681a15;        /* اللون العنابي/الخشبي الأساسي */
+  --primary-fg: #ffffff;
+  --secondary: #bbcae1;      /* اللون السماوي الهادئ */
+  --accent: #f67f45;         /* لون التنبيهات أو الـ Sale */
+
+  /* Layout & Surfaces */
+  --background: #fafafa;     /* أوف وايت مريح للعين */
+  --surface: #ffffff;
+  --surface-muted: #f1f4f9;  /* درجة مشتقة من السماوي للخلفيات */
+
+  --border: #e2e8f0;
+
+  /* Text */
+  --text-main: #1a1a1a;
+  --text-muted: #64748b;
+
+  /* Constraints */
+  --radius-card: 1rem;
+  --radius-button: 0.75rem;
+
+  /* Motion & Shadows */
+  --shadow-soft: 0 4px 12px rgba(104, 26, 21, 0.05);
+  --shadow-elevated: 0 20px 40px rgba(0, 0, 0, 0.08);
+  --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: 150ms ease;
+  
+  --focus-ring: 0 0 0 3px rgba(104, 26, 21, 0.2);
+}
+
+/* -------------------------------------------------------------------------- */
+/* 3. Dark Mode (Elegant Deep Tones)                                          */
+/* -------------------------------------------------------------------------- */
+.dark {
+  --primary: #a84b45;        /* درجة أفتح قليلاً للبريمري لتناسب الخلفية الغامقة */
+  --primary-fg: #ffffff;
+
+  --background: #0f1115;     /* أسود كربوني فخم */
+  --surface: #1a1d23;
+  --surface-muted: #242932;
+
+  --border: #2d333d;
+
+  --text-main: #f3f4f6;
+  --text-muted: #94a3b8;
+
+  --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.4);
+  --shadow-elevated: 0 25px 50px rgba(0, 0, 0, 0.6);
+  
+  --focus-ring: 0 0 0 3px rgba(168, 75, 69, 0.3);
+}
+
+/* -------------------------------------------------------------------------- */
+/* 4. Global Refinements                                                      */
+/* -------------------------------------------------------------------------- */
+@layer base {
+  *, ::before, ::after {
+    border-color: var(--border);
+  }
+
+  body {
+    @apply bg-background text-text-main antialiased;
+    transition: background-color var(--transition-base), color var(--transition-base);
+  }
+
+  /* تفاعل الأزرار بشكل عام */
+  button {
+    @apply cursor-pointer transition-all duration-200 active:scale-95;
+  }
+
+  /* نظام تركيز نظيف */
+  :focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
+  /* تخصيص السكرول بار ليتناسب مع ألوان المتجر */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-background;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-secondary/50 rounded-full hover:bg-primary/50 transition-colors;
+  }
+}

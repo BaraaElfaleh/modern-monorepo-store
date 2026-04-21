@@ -1,24 +1,12 @@
-// hooks/useWishlist.ts
-import { useWishlistContext } from '../context';
-import { adaptWishlistItem } from '../adapters/adapter';
+import { useWishlistContext } from "../context";
 
 export const useWishlist = () => {
-  const { wishlist, addItem, removeItem, clearWishlist, isInWishlist } = useWishlistContext();
-
-  const handleAdd = (product: {
-    id: number;
-    title: string;
-    price: number;
-    thumbnail: string;
-    rating: number;
-  }) => {
-    const item = adaptWishlistItem(product);
-    addItem(item);
-  };
+  const { wishlist, addItem, removeItem, clearWishlist, isInWishlist } =
+    useWishlistContext();
 
   return {
     wishlist,
-    addItem: handleAdd,
+    addItem,
     removeItem,
     clearWishlist,
     isInWishlist,

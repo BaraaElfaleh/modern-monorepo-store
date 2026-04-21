@@ -1,4 +1,5 @@
-export interface ProductRemoteDTO {
+export interface Product {
+  imageUrl: string | undefined;
   id: number;
   title: string;
   description: string;
@@ -9,7 +10,7 @@ export interface ProductRemoteDTO {
 }
 
 export interface DummyJSONResponse {
-  products: ProductRemoteDTO[];
+  products: Product[];
   total: number;
   skip: number;
   limit: number;

@@ -1,147 +1,153 @@
 import { useState, useEffect } from "react";
-import { Search, ShoppingCart, Menu, X, Sun, Moon, Heart, User } from "lucide-react";
-import { Button, cn } from "../../../../packages/ui/src"; 
-import { CartDrawer } from "../modules/cart";
+import {
+  Search,
+  ShoppingCart,
+  Menu,
+  X,
+  Sun,
+  Moon,
+  Heart,
+  User,
+  LogIn as LoginIcon, // تسمية مستعارة لتجنب التعارض
+  UserPlus
+} from "lucide-react";
+import { Button, cn } from "../../../../packages/ui/src";
+import { useAuthContext } from "../modules/auth";
+import { Link } from "@tanstack/react-router";
 
 export const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [cartOpen, setCartOpen] = useState(false);
   const [isDark, setIsDark] = useState(false);
 
+  const { user } = useAuthContext();
 
   useEffect(() => {
     const root = window.document.documentElement;
-    if (isDark) {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
-    }
+    isDark ? root.classList.add("dark") : root.classList.remove("dark");
   }, [isDark]);
 
+  const navLinks = [
+    { label: "Home", to: "/" },
+    { label: "Products", to: "/products" },
+    { label: "Contact", to: "/contact" },
+  ];
+
+  const iconLinkClass = "flex items-center justify-center rounded-full w-10 h-10 md:w-12 md:h-12 text-text-main hover:text-primary hover:bg-primary/5 transition-all active:scale-95 shrink-0";
+
   return (
-    <nav className="bg-background border-b border-text/10 sticky top-0 z-50 transition-all duration-500 ease-in-out">
+    <nav className="bg-surface/80 backdrop-blur-md border-b border-border sticky top-0 z-50 transition-all duration-500">
       
-      {/* Top Bar - انسيابي أكثر */}
-      <div className="bg-primary text-white text-[10px] uppercase tracking-widest text-center py-2 hidden md:block font-semibold">
-        Free shipping on orders over $50 · Use code <span className="underline decoration-accent underline-offset-4">NEXUS10</span>
+      {/* Top Bar */}
+      <div className="bg-primary text-primary-foreground text-[10px] uppercase tracking-[0.3em] text-center py-2 hidden md:block font-bold">
+        Free shipping on orders over $50 · Use code BOHO2026
       </div>
 
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="flex justify-between items-center h-20"> {/* زدنا الارتفاع للراحة البصرية */}
+      <div className="px-[4%] md:px-[6%]">
+        <div className="flex justify-between items-center h-20 md:h-24">
 
           {/* Logo Section */}
-          <div className="flex items-center gap-8">
-            <a href="#" className="text-2xl font-black tracking-tighter text-text hover:opacity-80 transition-opacity">
-              NEXUS<span className="text-primary">.</span>
-            </a>
+          <div className="flex items-center gap-8 lg:gap-12">
+            <Link to="/" className="text-xl md:text-2xl font-bold tracking-tighter text-primary uppercase italic hover:opacity-80 transition-opacity">
+              Boho.
+            </Link>
 
-            {/* Main Nav Links - مسافات مدروسة */}
-            <div className="hidden lg:flex items-center gap-8">
-              {["Home", "Products", "Contact"].map((link) => (
-                <a 
-                  key={link} 
-                  className="text-sm font-medium text-text-muted hover:text-primary transition-all relative group"
-                >
-                  {link}
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full" />
-                </a>
+            <div className="hidden lg:flex items-center gap-10">
+              {navLinks.map((link) => (
+                <Link key={link.label} to={link.to} className="text-[11px] font-bold uppercase tracking-[0.2em] text-text-muted hover:text-primary transition-all relative group">
+                  {link.label}
+                  <span className="absolute -bottom-2 left-0 w-0 h-[1.5px] bg-primary transition-all duration-300 group-hover:w-full" />
+                </Link>
               ))}
             </div>
           </div>
 
-          {/* Action Icons Section */}
-          <div className="flex items-center gap-3 md:gap-4">
-            
-            {/* Search - Dynamic Width */}
+          {/* Actions Area */}
+          <div className="flex items-center gap-1 md:gap-2">
+
+            {/* Search */}
             <div className={cn(
-              "relative flex items-center bg-surface rounded-full transition-all duration-300 border border-transparent focus-within:border-primary/30",
-              searchOpen ? "w-64 px-3" : "w-10 h-10 justify-center"
+              "relative flex items-center bg-surface-muted/50 rounded-full transition-all duration-500",
+              searchOpen ? "w-40 sm:w-64 px-3 h-10 md:h-12" : "w-10 md:w-12 h-10 md:h-12 justify-center"
             )}>
-              <Search 
-                size={18} 
-                className={cn("text-text-muted cursor-pointer hover:text-primary transition-colors", searchOpen && "mr-2")} 
-                onClick={() => setSearchOpen(!searchOpen)}
-              />
+              <Search size={20} strokeWidth={1.5} className="text-text-muted cursor-pointer hover:text-primary shrink-0" onClick={() => setSearchOpen(!searchOpen)} />
               {searchOpen && (
-                <input
-                  autoFocus
-                  placeholder="Search products..."
-                  className="w-full bg-transparent text-text text-sm outline-none placeholder:text-text-muted/50"
-                />
+                <input autoFocus placeholder="Search..." className="w-full bg-transparent text-xs outline-none border-none ring-0 placeholder:text-text-muted/40 font-medium ml-2" />
               )}
-              {searchOpen && <X size={14} className="text-text-muted cursor-pointer" onClick={() => setSearchOpen(false)} />}
             </div>
 
-            {/* Theme Toggle - Animated */}
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={() => setIsDark(!isDark)}
-              className="rounded-full hover:bg-primary/10 group"
-            >
-              {isDark ? (
-                <Sun size={20} className="text-yellow-400 rotate-0 transition-transform duration-500 group-hover:rotate-90" />
-              ) : (
-                <Moon size={20} className="text-text-muted rotate-0 transition-transform duration-500 group-hover:-rotate-12" />
-              )}
-            </Button>
+            {/* Wishlist Icon - Hidden on small mobile but visible elsewhere */}
+            <Link to="/wishlist" className={cn(iconLinkClass, "hidden sm:flex")}>
+              <Heart size={22} strokeWidth={1.5} />
+            </Link>
 
-            <div className="h-6 w-[1px] bg-text/10 mx-1 hidden md:block" /> {/* Divider */}
+            {/* Profile / Login Icon - THE FIX IS HERE */}
+            {user ? (
+              <Link to="/profile" className={iconLinkClass}>
+                <div className="w-8 h-8 rounded-full border border-primary/20 overflow-hidden ring-2 ring-primary/10 flex items-center justify-center">
+                   {user.image ? <img src={user.image} alt="profile" className="w-full h-full object-cover" /> : <User size={18} className="text-primary" />}
+                </div>
+              </Link>
+            ) : (
+              <Link to="/login" className={cn(iconLinkClass, "bg-primary/5 text-primary hover:bg-primary hover:text-white")}>
+                <LoginIcon size={20} strokeWidth={2} /> 
+              </Link>
+            )}
 
-            <Button variant="ghost" size="icon" className="hidden md:flex rounded-full text-text-muted hover:text-primary">
-              <User size={20} />
-            </Button>
-
-            <Button variant="ghost" size="icon" className="hidden md:flex rounded-full text-text-muted hover:text-primary">
-              <Heart size={20} />
-            </Button>
-
-            {/* Cart with Badge */}
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="relative rounded-full text-text-muted hover:text-primary" 
-              onClick={() => setCartOpen(true)}
-            >
-              <ShoppingCart size={20} />
-              <span className="absolute -top-0.5 -right-0.5 bg-accent text-white text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full ring-2 ring-background">
+            {/* Cart */}
+            <Link to="/cart" className={cn(iconLinkClass, "relative")}>
+              <ShoppingCart size={22} strokeWidth={1.5} />
+              <span className="absolute top-1 right-1 bg-primary text-primary-foreground text-[8px] font-black w-4 h-4 flex items-center justify-center rounded-full ring-2 ring-background">
                 3
               </span>
-            </Button>
+            </Link>
 
-            {/* Mobile Menu Toggle */}
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="lg:hidden rounded-full" 
-              onClick={() => setMobileOpen(!mobileOpen)}
+            {/* Theme Toggle - Centered with flex */}
+            <button
+              onClick={() => setIsDark(!isDark)}
+              className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full hover:bg-primary/5 transition-all shrink-0"
             >
-              {mobileOpen ? <X size={24} /> : <Menu size={24} />}
-            </Button>
-          </div>
+              {isDark ? <Sun size={22} className="text-accent" /> : <Moon size={22} className="text-text-muted" />}
+            </button>
 
+            {/* Mobile Menu */}
+            <button className="lg:hidden flex items-center justify-center w-10 h-10" onClick={() => setMobileOpen(!mobileOpen)}>
+              {mobileOpen ? <X size={26} /> : <Menu size={26} />}
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Mobile Menu - Premium Look */}
+      {/* Mobile Menu - Ensures no links are lost */}
       {mobileOpen && (
-        <div className="lg:hidden border-t border-text/10 bg-background/95 backdrop-blur-md absolute w-full px-6 py-8 space-y-6 shadow-xl animate-in fade-in slide-in-from-top-4">
+        <div className="lg:hidden border-t border-border bg-surface/98 backdrop-blur-2xl absolute w-full px-8 py-10 space-y-8 shadow-2xl animate-in fade-in slide-in-from-top-4 z-[60]">
+          
           <div className="space-y-4">
-            {["Home", "Products", "Offers", "Contact"].map((item) => (
-              <a key={item} className="block text-lg font-semibold text-text hover:text-primary transition-colors">
-                {item}
-              </a>
+            {navLinks.map((item) => (
+              <Link key={item.label} to={item.to} className="block text-3xl font-bold tracking-tighter italic uppercase text-text-main" onClick={() => setMobileOpen(false)}>
+                {item.label}
+              </Link>
             ))}
           </div>
-          <div className="flex flex-col gap-3 pt-4">
-            <Button variant="primary" className="w-full py-6 text-base">Sign In</Button>
-            <Button variant="outline" className="w-full py-6 text-base">Create Account</Button>
+
+          {/* Missing Links Fix for Mobile */}
+          <div className="pt-8 border-t border-border/50 grid grid-cols-1 gap-3">
+            <Link to="/wishlist" className="flex items-center gap-4 p-4 bg-surface-muted/50 rounded-2xl font-bold uppercase tracking-widest text-xs text-text-muted" onClick={() => setMobileOpen(false)}>
+              <Heart size={18} /> My Saved Items
+            </Link>
+            
+            {!user ? (
+              <Link to="/login" className="flex items-center gap-4 p-4 bg-primary text-white rounded-2xl font-bold uppercase tracking-widest text-xs" onClick={() => setMobileOpen(false)}>
+                <LoginIcon size={18} /> Sign In to Tribe
+              </Link>
+            ) : (
+              <Link to="/profile" className="flex items-center gap-4 p-4 bg-surface-muted/50 rounded-2xl font-bold uppercase tracking-widest text-xs text-text-muted" onClick={() => setMobileOpen(false)}>
+                <User size={18} /> My Account
+              </Link>
+            )}
           </div>
         </div>
       )}
-
-      <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
     </nav>
   );
 };
