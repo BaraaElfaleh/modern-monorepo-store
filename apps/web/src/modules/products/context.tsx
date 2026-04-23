@@ -1,9 +1,9 @@
 import { createContext, useContext,type ReactNode } from 'react';
-import type { Product } from './entities/entitiy';
+import type { ProductItem } from './entities/entitiy';
 import { useProducts } from './hooks/useProducts';
 
 interface ProductsContextType {
-  products: Product[];
+  products: ProductItem[];
   isLoading: boolean;
   error: string | null;
 }

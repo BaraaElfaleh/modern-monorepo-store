@@ -4,4 +4,10 @@ export { useProducts } from './hooks/useProducts';
 
 export { ProductsProvider, useProductsContext } from './context';
 
-export type { Product } from './entities/entitiy';
+export type { ProductItem } from './entities/entitiy';
+
+export { useProduct } from './hooks/useProduct';    
+
+export { ProductList } from './views/ProductList';
+
+export { ProductDetails } from './views/ProductDetails';
