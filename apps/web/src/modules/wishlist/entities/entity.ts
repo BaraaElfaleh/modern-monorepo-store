@@ -1,10 +1,11 @@
 // entities/entity.ts
 export interface WishlistItem {
-  productId: number;
-  title: string;
+  id: string;
+  name: string;
   price: number;
-  thumbnail: string;
-  rating: number;
+  description: string;
+  imageUrl: string;
+  category: string;
 }
 
 export interface Wishlist {

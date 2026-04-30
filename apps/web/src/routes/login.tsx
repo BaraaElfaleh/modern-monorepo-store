@@ -1,10 +1,19 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { LoginForm } from '../modules/auth/views/LoginForm'
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { LoginPage } from "../pages/LoginPage";
 
-export const Route = createFileRoute('/login')({
-  component: RouteComponent,
-})
+export const Route = createFileRoute("/login")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    redirect: (search.redirect as string) || "/",
+  }),
+  component: () => {
+    const navigate = useNavigate();
+    const { redirect } = Route.useSearch();
 
-function RouteComponent() {
-  return <LoginForm />
-}
+    return (
+      <LoginPage 
+        redirect={redirect} 
+        onSuccess={(target) => navigate({ to: target })} 
+      />
+    );
+  },
+});

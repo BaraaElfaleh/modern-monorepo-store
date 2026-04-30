@@ -1,44 +1,58 @@
-// services/service.ts
-import type { Cart, CartItem } from '../entities/entity';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type { AddToCartDto, UpdateCartItemDto } from '../dto/dto';
+import type { Cart, CartItem } from '../entities/entity'; 
+import type { UpdateCartItemDto } from '../dto/dto';
 
-export const addItem = (cart: Cart, item: CartItem): Cart => {
-  const exists = cart.items.find(i => i.productId === item.productId);
+export const addItem = (cart: Cart, newItem: CartItem): Cart => {
+  const existingItemIndex = cart.items.findIndex(item => item.productId === newItem.productId);
+  let updatedItems = [...cart.items];
 
-  const items = exists
-    ? cart.items.map(i =>
-        i.productId === item.productId
-          ? { ...i, quantity: i.quantity + item.quantity, total: i.price * (i.quantity + item.quantity) }
-          : i
-      )
-    : [...cart.items, item];
+  if (existingItemIndex !== -1) {
+    const existingItem = updatedItems[existingItemIndex];
+    const newQuantity = existingItem.quantity + newItem.quantity;
+    updatedItems[existingItemIndex] = {
+      ...existingItem,
+      quantity: newQuantity,
+      total: newQuantity * existingItem.price
+    };
+  } else {
+    updatedItems.push({
+      ...newItem,
+      total: newItem.price * newItem.quantity
+    });
+  }
 
-  return recalculate(items);
+  return {
+    items: updatedItems,
+    totalQuantity: updatedItems.reduce((sum, item) => sum + item.quantity, 0),
+    totalPrice: updatedItems.reduce((sum, item) => sum + item.total, 0)
+  };
 };
 
 export const removeItem = (cart: Cart, productId: number): Cart => {
-  const items = cart.items.filter(i => i.productId !== productId);
-  return recalculate(items);
+  const updatedItems = cart.items.filter(item => item.productId !== productId);
+  return {
+    items: updatedItems,
+    totalQuantity: updatedItems.reduce((sum, item) => sum + item.quantity, 0),
+    totalPrice: updatedItems.reduce((sum, item) => sum + item.total, 0)
+  };
 };
 
 export const updateItem = (cart: Cart, dto: UpdateCartItemDto): Cart => {
-  const items = cart.items.map(i =>
-    i.productId === dto.productId
-      ? { ...i, quantity: dto.quantity, total: i.price * dto.quantity }
-      : i
-  );
-  return recalculate(items);
+  const updatedItems = cart.items.map(item => {
+    if (item.productId === dto.productId) {
+      return { ...item, quantity: dto.quantity, total: dto.quantity * item.price };
+    }
+    return item;
+  });
+
+  return {
+    items: updatedItems,
+    totalQuantity: updatedItems.reduce((sum, item) => sum + item.quantity, 0),
+    totalPrice: updatedItems.reduce((sum, item) => sum + item.total, 0)
+  };
 };
 
 export const clearCart = (): Cart => ({
   items: [],
   totalQuantity: 0,
-  totalPrice: 0,
-});
-
-const recalculate = (items: CartItem[]): Cart => ({
-  items,
-  totalQuantity: items.reduce((acc, i) => acc + i.quantity, 0),
-  totalPrice: items.reduce((acc, i) => acc + i.total, 0),
+  totalPrice: 0
 });

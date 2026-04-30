@@ -1,18 +1,18 @@
 import { useState, useEffect } from "react";
 import {
   Search,
-  ShoppingCart,
   Menu,
   X,
   Sun,
   Moon,
   Heart,
   User,
-  LogIn as LoginIcon, // تسمية مستعارة لتجنب التعارض
-  UserPlus
+  LogIn as LoginIcon,
+  ShoppingBag
 } from "lucide-react";
-import { Button, cn } from "../../../../packages/ui/src";
-import { useAuthContext } from "../modules/auth";
+import {  cn } from "../../../../packages/ui/src";
+import { useAuth } from "../modules/auth";
+import { useCart } from "../modules/cart/hooks/useCart"; // استيراد الهوك الجديد
 import { Link } from "@tanstack/react-router";
 
 export const Navbar = () => {
@@ -20,12 +20,17 @@ export const Navbar = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [isDark, setIsDark] = useState(false);
 
-  const { user } = useAuthContext();
+  const { user } = useAuth();
+  const { cartCount } = useCart(); // جلب عدد المنتجات
 
-  useEffect(() => {
-    const root = window.document.documentElement;
-    isDark ? root.classList.add("dark") : root.classList.remove("dark");
-  }, [isDark]);
+ useEffect(() => {
+  const root = window.document.documentElement;
+  if (isDark) {
+    root.classList.add("dark");
+  } else {
+    root.classList.remove("dark");
+  }
+}, [isDark]);
 
   const navLinks = [
     { label: "Home", to: "/" },
@@ -76,12 +81,12 @@ export const Navbar = () => {
               )}
             </div>
 
-            {/* Wishlist Icon - Hidden on small mobile but visible elsewhere */}
+            {/* Wishlist Icon */}
             <Link to="/wishlist" className={cn(iconLinkClass, "hidden sm:flex")}>
               <Heart size={22} strokeWidth={1.5} />
             </Link>
 
-            {/* Profile / Login Icon - THE FIX IS HERE */}
+            {/* Profile / Login */}
             {user ? (
               <Link to="/profile" className={iconLinkClass}>
                 <div className="w-8 h-8 rounded-full border border-primary/20 overflow-hidden ring-2 ring-primary/10 flex items-center justify-center">
@@ -94,15 +99,17 @@ export const Navbar = () => {
               </Link>
             )}
 
-            {/* Cart */}
-            <Link to="/cart" className={cn(iconLinkClass, "relative")}>
-              <ShoppingCart size={22} strokeWidth={1.5} />
-              <span className="absolute top-1 right-1 bg-primary text-primary-foreground text-[8px] font-black w-4 h-4 flex items-center justify-center rounded-full ring-2 ring-background">
-                3
-              </span>
+            {/* Cart Icon with Dynamic Badge */}
+            <Link to="/cart" className={cn(iconLinkClass, "relative group")}>
+              <ShoppingBag size={22} strokeWidth={1.5} className="group-hover:text-primary transition-colors" />
+              {cartCount > 0 && (
+                <span className="absolute top-1 right-1 bg-primary text-white text-[8px] font-black min-w-4 h-4 px-1 flex items-center justify-center rounded-full ring-2 ring-background animate-in zoom-in duration-300">
+                  {cartCount > 9 ? "+9" : cartCount}
+                </span>
+              )}
             </Link>
 
-            {/* Theme Toggle - Centered with flex */}
+            {/* Theme Toggle */}
             <button
               onClick={() => setIsDark(!isDark)}
               className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full hover:bg-primary/5 transition-all shrink-0"
@@ -110,7 +117,7 @@ export const Navbar = () => {
               {isDark ? <Sun size={22} className="text-accent" /> : <Moon size={22} className="text-text-muted" />}
             </button>
 
-            {/* Mobile Menu */}
+            {/* Mobile Menu Toggle */}
             <button className="lg:hidden flex items-center justify-center w-10 h-10" onClick={() => setMobileOpen(!mobileOpen)}>
               {mobileOpen ? <X size={26} /> : <Menu size={26} />}
             </button>
@@ -118,9 +125,9 @@ export const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu - Ensures no links are lost */}
+      {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="lg:hidden border-t border-border bg-surface/98 backdrop-blur-2xl absolute w-full px-8 py-10 space-y-8 shadow-2xl animate-in fade-in slide-in-from-top-4 z-[60]">
+        <div className="lg:hidden border-t border-border bg-surface/98 backdrop-blur-2xl absolute w-full px-8 py-10 space-y-8 shadow-2xl animate-in fade-in slide-in-from-top-4 z-60">
           
           <div className="space-y-4">
             {navLinks.map((item) => (
@@ -130,7 +137,6 @@ export const Navbar = () => {
             ))}
           </div>
 
-          {/* Missing Links Fix for Mobile */}
           <div className="pt-8 border-t border-border/50 grid grid-cols-1 gap-3">
             <Link to="/wishlist" className="flex items-center gap-4 p-4 bg-surface-muted/50 rounded-2xl font-bold uppercase tracking-widest text-xs text-text-muted" onClick={() => setMobileOpen(false)}>
               <Heart size={18} /> My Saved Items

@@ -1,6 +1,3 @@
-// index.ts
-export * from './dto/dto';
-export * from './services/service';
-export * from './hooks/useAuth';
-export * from './context';
-export * from './views/LoginForm';
+export * from "./types/type";
+export { AuthService } from "./services/service";
+export { AuthProvider, useAuth } from "./context";

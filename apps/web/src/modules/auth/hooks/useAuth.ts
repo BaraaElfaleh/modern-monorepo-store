@@ -1,31 +1,39 @@
-// auth.hooks.ts
-import { useState } from 'react';
-import { AuthAPI } from '../services/service';
-import type { User, LoginPayload } from '../dto/dto';
+import { useState, useEffect } from "react";
+import type { User } from "../types/type";
+import { AuthService } from "../services/service";
 
 export const useAuth = () => {
-  const [user, setUser] = useState<User | null>(() => {
-    const stored = localStorage.getItem('user');
-    return stored ? JSON.parse(stored) : null;
-  });
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const [loading, setLoading] = useState(false);
-
-  const login = async (payload: LoginPayload) => {
-    setLoading(true);
-    try {
-      const user = await AuthAPI.login(payload);
-      setUser(user);
-      localStorage.setItem('user', JSON.stringify(user));
-    } finally {
+  useEffect(() => {
+    const initAuth = async () => {
+      const token = localStorage.getItem("auth_token");
+      if (token) {
+        try {
+          const data = await AuthService.getCurrentUser(token);
+          setUser(data);
+        } catch {
+          localStorage.removeItem("auth_token");
+        }
+      }
       setLoading(false);
+    };
+    initAuth();
+  }, []);
+
+  const login = async (credentials: Record<string, string>) => {
+    const data = await AuthService.login(credentials);
+    if (data.token) {
+      localStorage.setItem("auth_token", data.token);
+      setUser(data);
     }
   };
 
   const logout = () => {
+    localStorage.removeItem("auth_token");
     setUser(null);
-    localStorage.removeItem('user');
   };
 
-  return { user, login, logout, loading };
+  return { user, loading, login, logout, isAuthenticated: !!user };
 };
