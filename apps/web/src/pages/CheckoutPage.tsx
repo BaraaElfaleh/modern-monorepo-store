@@ -5,12 +5,15 @@ import { Button } from "./../../../../packages/ui/src";
 interface CheckoutPageProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   state: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   cart: any;
   totalAmount: number;
   isPending: boolean;
   nextStep: () => void;
   prevStep: () => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setAddress: (address: any) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setPayment: (payment: any) => void;
   handleFinalSubmit: () => void;
 }

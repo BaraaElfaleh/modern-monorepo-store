@@ -1,19 +1,28 @@
-import { Link } from '@tanstack/react-router';
+import { Link, useSearch } from '@tanstack/react-router';
 import { Check, Sparkles, ArrowRight, PackageCheck } from 'lucide-react';
-import { Button } from "../../../../packages/ui/src";
+import { Button } from "../../../../packages/ui/src"; // تأكد من صحة المسار
 import { useEffect, useState } from 'react';
+import { useCart } from '../modules/cart/hooks/useCart';
 
 export function SuccessPage() {
   const [mounted, setMounted] = useState(false);
+  const { clearCart } = useCart();
+  
+  // جلب الـ id من الـ URL (Search Params)
+  // مثال: /order-success?id=2626
+  const search = useSearch({ from: '/_authenticated/checkout/success' });
+  const orderId = (search as any).id || "N/A";
 
   useEffect(() => {
     setMounted(true);
+    // تنظيف السلة بمجرد نجاح العملية والوصول لهذه الصفحة
+    clearCart();
   }, []);
 
   return (
-    <div className="bg-background min-h-screen flex items-center justify-center px-[6%] py-20">
-      {/* الإضاءة الخلفية الناعمة */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] -z-10" />
+    <div className="bg-background min-h-screen flex items-center justify-center px-[6%] py-20 overflow-hidden relative">
+      {/* الإضاءة الخلفية الناعمة - تم تعديلها لتناسب الـ Boho Style */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] -z-10 animate-pulse" />
 
       <div className={`max-w-xl w-full bg-surface/40 backdrop-blur-2xl border border-border/50 p-12 rounded-[4rem] shadow-soft text-center transition-all duration-1000 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
         
@@ -26,7 +35,7 @@ export function SuccessPage() {
           <Sparkles className="absolute -top-2 -right-2 text-primary animate-pulse" size={24} />
         </div>
 
-        {/* النص */}
+        {/* النص الرئيسي */}
         <h1 className="text-4xl font-bold tracking-tighter uppercase italic mb-4 text-text-main">
           Ritual Completed
         </h1>
@@ -35,13 +44,16 @@ export function SuccessPage() {
         </p>
 
         <div className="space-y-6 mb-12">
-          <p className="text-sm text-text-muted leading-relaxed max-w-[300px] mx-auto">
+          <p className="text-sm text-text-muted leading-relaxed max-w-[320px] mx-auto">
             We’ve received your order and sent a confirmation to your email. Your pieces will reach you soon.
           </p>
           
-          <div className="flex items-center justify-center gap-4 py-4 px-6 bg-background/50 rounded-2xl border border-border/30 w-fit mx-auto">
+          {/* الـ Order ID أصبح ديناميكياً الآن */}
+          <div className="flex items-center justify-center gap-4 py-4 px-6 bg-background/50 rounded-2xl border border-border/30 w-fit mx-auto group hover:border-primary/30 transition-colors">
             <PackageCheck size={18} className="text-primary" />
-            <span className="text-[10px] font-black uppercase tracking-widest text-text-main">Order ID: #BOHO-7729</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-text-main">
+              Order ID: <span className="text-primary">#BOHO-{orderId}</span>
+            </span>
           </div>
         </div>
 
@@ -54,7 +66,7 @@ export function SuccessPage() {
           </Link>
           
           <Link to="/profile">
-            <button className="text-[10px] uppercase tracking-widest font-bold text-text-muted hover:text-primary transition-colors py-2">
+            <button className="text-[10px] uppercase tracking-widest font-bold text-text-muted hover:text-primary transition-colors py-2 cursor-pointer">
               Track your order
             </button>
           </Link>

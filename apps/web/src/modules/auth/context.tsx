@@ -23,9 +23,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const login = async (u: string, p: string) => {
+  setIsLoading(true); // اختياري: لإظهار اللودر أثناء التحقق
+  try {
     const userData = await AuthService.login({ username: u, password: p });
+    
+    // تأكد أن الـ userData يحتوي على الـ token، واحفظه فوراً
+    if (userData.token) {
+      localStorage.setItem("auth_token", userData.token);
+    }
+    
     setUser(userData);
-  };
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const logout = () => {
     localStorage.removeItem("auth_token");

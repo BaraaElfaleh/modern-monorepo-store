@@ -20,7 +20,7 @@ export const useCreateOrder = () => {
       // 1. مسح السلة
       clearCart();
       // 2. التوجه لصفحة "شكراً لك" أو النجاح
-      navigate({ to: "/order-success", search: { id: data.orderId } });
+      navigate({ to: "/checkout/success", search: { id: data.orderId } });
     },
   });
 };

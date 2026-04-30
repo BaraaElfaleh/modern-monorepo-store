@@ -1,36 +1,38 @@
-import { createRootRoute, Outlet, Link } from "@tanstack/react-router";
+import { createRootRouteWithContext, Outlet, Link } from "@tanstack/react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "../app/queryClient";
 
 import { Navbar } from "../components/Navbar";
 import { CartProvider } from "../modules/cart";
 import { WishlistProvider } from "../modules/wishlist";
-import { AuthProvider } from "../modules/auth";
 import { Footer } from "../components/Footer";
-// استيراد الـ Provider الخاص بالـ Checkout
 import { CheckoutProvider } from "../modules/checkout/context"; 
 
-export const Route = createRootRoute({
+// 1. تعريف نوع الـ Context ليعرف الراوتر بوجود auth
+interface MyRouterContext {
+  auth: any; // أو استخدم النوع الخاص بك من AuthContextType
+}
+
+// 2. استخدام createRootRouteWithContext بدلاً من createRootRoute
+export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: () => (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <CartProvider>
-          <WishlistProvider>
-            
-            <CheckoutProvider>
-              <div className="flex flex-col min-h-screen bg-background">
-                <Navbar />
+      {/* الـ AuthProvider تم نقله لملف main.tsx لضمان توفر البيانات للراوتر */}
+      <CartProvider>
+        <WishlistProvider>
+          <CheckoutProvider>
+            <div className="flex flex-col min-h-screen bg-background">
+              <Navbar />
 
-                <main className="grow">
-                  <Outlet />
-                </main>
+              <main className="grow">
+                <Outlet />
+              </main>
 
-                <Footer />
-              </div>
-            </CheckoutProvider>
-          </WishlistProvider>
-        </CartProvider>
-      </AuthProvider>
+              <Footer />
+            </div>
+          </CheckoutProvider>
+        </WishlistProvider>
+      </CartProvider>
     </QueryClientProvider>
   ),
   

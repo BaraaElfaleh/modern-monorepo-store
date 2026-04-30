@@ -1,3 +1,4 @@
+// CartPage.tsx
 import { Link } from "@tanstack/react-router";
 import { Trash2, ShoppingBag, ArrowLeft, ArrowRight } from "lucide-react";
 import { useCart } from "../hooks/useCart";
@@ -40,7 +41,7 @@ export const CartPage = () => {
           </h1>
         </div>
         <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/40">
-           Curating {cartCount} Sacred Items
+            Curating {cartCount} Sacred Items
         </p>
       </div>
 
@@ -48,7 +49,7 @@ export const CartPage = () => {
         {/* Items List */}
         <div className="flex-1">
           <div className="space-y-4">
-            {cart.map((item) => (
+            {cart.map((item, index) => (
               <CartItem key={item.id || item.productId || `cart-item-${index}`} item={item} />
             ))}
           </div>
@@ -87,9 +88,12 @@ export const CartPage = () => {
             </div>
 
             <div className="space-y-4 pt-4">
-              <Button className="w-full py-8 rounded-2xl font-bold uppercase tracking-[0.2em] text-[11px] shadow-elevated group">
-                Proceed to Checkout <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
-              </Button>
+              {/* تعديل الزر ليصبح Link موجه لمسار الـ Checkout المحمي */}
+              <Link to="/checkout" className="block">
+                <Button className="w-full py-8 rounded-2xl font-bold uppercase tracking-[0.2em] text-[11px] shadow-elevated group">
+                  Proceed to Checkout <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
               
               <Link to="/products" className="block">
                 <button className="w-full text-[10px] font-black uppercase tracking-widest text-text-muted hover:text-primary transition-colors py-2">
