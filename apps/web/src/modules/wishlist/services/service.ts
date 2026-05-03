@@ -1,6 +1,7 @@
 // services/service.ts
 import type { Wishlist, WishlistItem } from '../entities/entity';
 
+
 export const addItem = (wishlist: Wishlist, item: WishlistItem): Wishlist => {
   const exists = wishlist.items.find(i => i.productId === item.productId);
   if (exists) return wishlist;

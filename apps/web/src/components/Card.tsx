@@ -14,19 +14,24 @@ interface WishlistItemProps {
   };
 }
 
+
 export const WishlistItem = ({ item }: WishlistItemProps) => {
   const { wishlist, removeItem: removeFromWishlist, addItem: addToWishlist } = useWishlist();
   const { addItem: addToCart, removeItem: removeFromCart, isInCart } = useCart();
 
-  // فحص الحالة باستخدام الـ Hooks الذكية
-  const isFavorite = wishlist.some((fav) => fav.id === item.id);
+
+const isFavorite = wishlist.some((fav) => String(fav.id) === String(item.id));
   const inCart = isInCart(item.id);
 
   const handleWishlistToggle = () => {
     if (isFavorite) {
-      removeFromWishlist(item.id);
+      removeFromWishlist(item.id as unknown as number);
     } else {
-      addToWishlist(item);
+      addToWishlist({
+  ...item,
+  title: item.name,
+  thumbnail: item.imageUrl,
+} as any);
     }
   };
 
@@ -40,10 +45,10 @@ export const WishlistItem = ({ item }: WishlistItemProps) => {
   };
 
   return (
-    <div className="group relative bg-surface/30 backdrop-blur-sm rounded-[2rem] border border-border/40 overflow-hidden hover:shadow-elevated transition-all duration-500">
+    <div className="group relative bg-surface/30 backdrop-blur-sm rounded-4xl border border-border/40 overflow-hidden hover:shadow-elevated transition-all duration-500">
       
       {/* Image Container */}
-      <div className="relative aspect-[4/5] overflow-hidden bg-surface-muted">
+      <div className="relative aspect-4/5 overflow-hidden bg-surface-muted">
         <img
           src={item.imageUrl}
           alt={item.name}
@@ -77,13 +82,13 @@ export const WishlistItem = ({ item }: WishlistItemProps) => {
               {item.category || "Authentic Piece"}
             </p>
           </div>
-          <p className="font-black text-primary flex-shrink-0">${item.price}</p>
+          <p className="font-black text-primary shrink-0">${item.price}</p>
         </div>
 
         {/* Cart Action Button */}
         <Button
           onClick={handleCartToggle}
-          variant={inCart ? "outline" : "default"}
+          variant={inCart ? "outline" : "primary"}
           className={`w-full py-6 rounded-xl text-[10px] font-black uppercase tracking-widest gap-2 group/btn shadow-soft transition-all duration-300 ${
             inCart ? "border-accent/30 text-accent hover:bg-accent/5" : ""
           }`}

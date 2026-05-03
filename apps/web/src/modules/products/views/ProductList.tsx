@@ -1,7 +1,6 @@
 import { Pagination } from "../../../components/Pagination";
 import { useState } from "react";
 import { useProducts } from "../hooks/useProducts";
-import type { Product } from "../dto/dto";
 import { WishlistItem } from "../../../components/Card";
 import { CategoryFilter } from "./CategoryFilter"; 
 
@@ -10,7 +9,7 @@ export const ProductList = () => {
   const [page, setPage] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState("all");
 
-  const products: Product[] = data ?? [];
+  const products: any[] = data ?? [];
 
   // 1. منطق الفلترة (Filtering Logic)
   const filteredProducts = selectedCategory === "all" 

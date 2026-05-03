@@ -4,14 +4,14 @@ import { Button } from "../../../../../../packages/ui/src"; // تأكد من ا�
 import { User, Lock, ArrowRight } from 'lucide-react';
 
 export const LoginForm = () => {
-  const { login, loading } = useAuthContext();
+  const { login, isLoading } = useAuthContext();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await login({ username, password });
+    await login( username, password );
   };
 
   return (
@@ -60,10 +60,10 @@ export const LoginForm = () => {
         {/* Submit Button */}
         <Button 
           type="submit" 
-          disabled={loading}
+          disabled={isLoading}
           className="w-full py-7 rounded-2xl font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2 group shadow-elevated"
         >
-          {loading ? (
+          {isLoading ? (
             <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
           ) : (
             <>

@@ -5,17 +5,19 @@ import { ShoppingBag, Trash2 } from 'lucide-react';
 
 export const CartSummary = () => {
   const { cart, clearCart } = useCart();
+  const totalQuantity = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+const totalPrice = cart.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0);
 
   return (
     <div className="pt-6 space-y-4 border-t border-border/50">
       <div className="flex justify-between text-[10px] uppercase tracking-widest font-bold text-text-muted">
-        <span>Items ({cart.totalQuantity})</span>
-        <span>${cart.totalPrice.toFixed(2)}</span>
+        <span>Items ({totalQuantity})</span>
+        <span>${totalPrice.toFixed(2)}</span>
       </div>
       
       <div className="flex justify-between text-xl font-bold tracking-tighter italic text-text-main">
         <span>Total Amount</span>
-        <span className="text-primary">${cart.totalPrice.toFixed(2)}</span>
+        <span className="text-primary">${totalPrice.toFixed(2)}</span>
       </div>
 
       <div className="space-y-2 pt-2">

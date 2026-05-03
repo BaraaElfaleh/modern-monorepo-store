@@ -12,5 +12,5 @@ export const adaptWishlistItem = (product: {
   title: product.title,
   price: product.price,
   thumbnail: product.thumbnail,
-  rating: product.rating,
+  id: ''
 });

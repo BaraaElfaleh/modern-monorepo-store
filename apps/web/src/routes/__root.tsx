@@ -1,6 +1,6 @@
 import { createRootRouteWithContext, Outlet, Link } from "@tanstack/react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { queryClient } from "../app/queryClient";
+import { queryClient } from "../app/QueryClient";
 
 import { Navbar } from "../components/Navbar";
 import { CartProvider } from "../modules/cart";

@@ -49,8 +49,8 @@ export const CartPage = () => {
         {/* Items List */}
         <div className="flex-1">
           <div className="space-y-4">
-            {cart.map((item, index) => (
-              <CartItem key={item.id || item.productId || `cart-item-${index}`} item={item} />
+            {cart.map((item) => (
+              <CartItem key={item.productId || (item as any).id} item={item} />
             ))}
           </div>
 
@@ -63,7 +63,7 @@ export const CartPage = () => {
         </div>
 
         {/* Order Summary Card */}
-        <div className="w-full lg:w-[400px]">
+        <div className="w-full lg:w-100">
           <div className="bg-surface/40 backdrop-blur-xl rounded-[2.5rem] p-10 space-y-8 sticky top-32 border border-border/50 shadow-soft">
             <h2 className="text-2xl font-bold tracking-tighter uppercase italic border-b border-border pb-6">
               Summary

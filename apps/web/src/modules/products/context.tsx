@@ -11,10 +11,10 @@ interface ProductsContextType {
 const ProductsContext = createContext<ProductsContextType | undefined>(undefined);
 
 export const ProductsProvider = ({ children }: { children: ReactNode }) => {
-  const { products, isLoading, error } = useProducts();
+  const { data: products, isLoading, error } = useProducts();
 
   return (
-    <ProductsContext.Provider value={{ products, isLoading: isLoading, error }}>
+    <ProductsContext.Provider value={{ products: products || [], isLoading: isLoading, error: error ? error.message : null }}>
       {children}
     </ProductsContext.Provider>
   );

@@ -68,7 +68,7 @@ export function RegisterPage({ onSuccess }: RegisterPageProps) {
           <div className="mt-8 pt-6 border-t border-border/50 text-center">
             <p className="text-[10px] text-text-muted uppercase tracking-widest">
               Already part of the tribe?{" "}
-              <Link to="/login" className="text-primary font-black hover:underline cursor-pointer">Enter Here</Link>
+              <Link to="/login" search={{ redirect: "/" } as any} className="text-primary font-black hover:underline cursor-pointer">Enter Here</Link>
             </p>
           </div>
         </div>

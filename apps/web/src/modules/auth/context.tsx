@@ -10,10 +10,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const initAuth = async () => {
+      const token = localStorage.getItem("auth_token");
+      if (!token) {
+        setIsLoading(false);
+        return;
+      }
+
       try {
-        const userData = await AuthService.me();
+        // نستخدم getCurrentUser بدل me
+        const userData = await AuthService.getCurrentUser(token);
         setUser(userData);
       } catch {
+        localStorage.removeItem("auth_token");
         setUser(null);
       } finally {
         setIsLoading(false);
@@ -21,7 +29,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
     initAuth();
   }, []);
-
   const login = async (u: string, p: string) => {
   setIsLoading(true); // اختياري: لإظهار اللودر أثناء التحقق
   try {
@@ -55,3 +62,5 @@ export const useAuth = () => {
   if (!context) throw new Error("useAuth must be used within AuthProvider");
   return context;
 };
+
+export const useAuthContext = useAuth;
