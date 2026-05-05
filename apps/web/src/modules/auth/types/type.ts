@@ -1,13 +1,18 @@
 export interface User {
-  id: number;
+  id: string;
   username: string;
   email: string;
-  firstName: string;
-  lastName: string;
-  image: string;
-  token?: string;
+  firstName?: string;
+  lastName?: string;
+  image?: string;
+  avatar?: string;      // أضف هذا
+  token?: string;       
+  accessToken?: string; // أضف هذا
+  city?: string;        // أضف هذا
+  address?: {           // أضف هذا
+    city: string;
+  };
 }
-
 export interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;

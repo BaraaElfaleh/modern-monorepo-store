@@ -28,7 +28,7 @@ export const CartPage = () => {
   }
 
   return (
-    <main className="max-w-[1400px] mx-auto px-[6%] py-16 animate-in fade-in duration-1000">
+    <main className="max-w-350 mx-auto px-[6%] py-16 animate-in fade-in duration-1000">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 border-b border-border pb-10">
         <div>

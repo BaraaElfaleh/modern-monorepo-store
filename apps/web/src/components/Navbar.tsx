@@ -12,8 +12,8 @@ import {
 } from "lucide-react";
 import { cn } from "../../../../packages/ui/src";
 import { useAuth } from "../modules/auth";
-import { useCart } from "../modules/cart/hooks/useCart"; // استيراد الهوك الجديد
-import { Link } from "@tanstack/react-router";
+import { useCart } from "../modules/cart/hooks/useCart";
+import { Link, useNavigate, useSearch } from "@tanstack/react-router";
 
 export const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -21,7 +21,24 @@ export const Navbar = () => {
   const [isDark, setIsDark] = useState(false);
 
   const { user } = useAuth();
-  const { cartCount } = useCart(); // جلب عدد المنتجات
+  const { cartCount } = useCart();
+
+  const navigate = useNavigate();
+
+  const searchParams: any = useSearch({ 
+    strict: false 
+  });
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+
+    navigate({
+      to: "/products",
+      search: (prev: any) => ({ ...prev, q: value || undefined }),
+      replace: true, 
+    });
+  };
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -93,8 +110,10 @@ export const Navbar = () => {
               {searchOpen && (
                 <input
                   autoFocus
-                  placeholder="Search..."
+                  placeholder="Search for masterpieces..."
                   className="w-full bg-transparent text-xs outline-none border-none ring-0 placeholder:text-text-muted/40 font-medium ml-2"
+                  value={searchParams?.q || ""}
+                  onChange={handleSearchChange}
                 />
               )}
             </div>
@@ -124,8 +143,8 @@ export const Navbar = () => {
               </Link>
             ) : (
               <Link
-                to={"/login" as any} 
-  search={{ redirect: "/" } as any}
+                to={"/login" as any}
+                search={{ redirect: "/" } as any}
                 className={cn(
                   iconLinkClass,
                   "bg-primary/5 text-primary hover:bg-primary hover:text-white",
@@ -200,9 +219,7 @@ export const Navbar = () => {
             {!user ? (
               <Link
                 to="/login"
-                search={{
-                  redirect: "/",
-                }}
+                search={{ redirect: "/" }}
                 className="flex items-center gap-4 p-4 bg-primary text-white rounded-2xl font-bold uppercase tracking-widest text-xs"
                 onClick={() => setMobileOpen(false)}
               >

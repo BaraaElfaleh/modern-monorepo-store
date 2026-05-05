@@ -3,32 +3,45 @@ import { useState } from "react";
 import { useProducts } from "../hooks/useProducts";
 import { WishlistItem } from "../../../components/Card";
 import { CategoryFilter } from "./CategoryFilter"; 
+// 1. استيراد useSearch من الراوتر
+import { useSearch } from "@tanstack/react-router";
 
 export const ProductList = () => {
   const { data, isLoading, error } = useProducts();
   const [page, setPage] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState("all");
 
+  // 2. جلب نص البحث من الرابط (q)
+  // استخدمنا strict: false لأن هذا المكون قد يكون جزءاً من مسار أو صفحة
+  const { q } = useSearch({ strict: false }) as { q?: string };
+
   const products: any[] = data ?? [];
 
-  // 1. منطق الفلترة (Filtering Logic)
-  const filteredProducts = selectedCategory === "all" 
-    ? products 
-    : products.filter(p => p.category === selectedCategory);
+  // 3. تعديل منطق الفلترة ليشمل القسم والبحث معاً
+  const filteredProducts = products.filter((p) => {
+    // تحقق من القسم
+    const matchesCategory = selectedCategory === "all" || p.category === selectedCategory;
+    
+    // تحقق من نص البحث (إذا كان q موجوداً، نبحث في الاسم والوصف مثلاً)
+    const matchesSearch = !q || 
+      p.name.toLowerCase().includes(q.toLowerCase()) || 
+      p.description?.toLowerCase().includes(q.toLowerCase());
+
+    return matchesCategory && matchesSearch;
+  });
 
   const pageSize = 8;
   const totalPages = Math.ceil(filteredProducts.length / pageSize);
 
-  // 2. تقسيم المنتجات المفلترة (Pagination Logic)
+  // 4. تقسيم المنتجات المفلترة (Pagination Logic)
   const paginatedProducts = filteredProducts.slice(
     (page - 1) * pageSize,
     page * pageSize
   );
 
-  // دالة لتغيير الكاتيغوري وتصفير الصفحة
   const handleCategoryChange = (slug: string) => {
     setSelectedCategory(slug);
-    setPage(1); // مهم جداً ترجع لصفحة 1 لما تفلتر
+    setPage(1); 
   };
 
   if (isLoading) {
@@ -51,7 +64,6 @@ export const ProductList = () => {
 
   return (
     <main className="container mx-auto p-6">
-      {/* إضافة قسم الفلترة هنا */}
       <section className="mb-8">
         <CategoryFilter 
           activeCategory={selectedCategory} 
@@ -59,7 +71,15 @@ export const ProductList = () => {
         />
       </section>
 
-      {/* شبكة المنتجات */}
+      {/* عرض رسالة بسيطة توضح عن ماذا يبحث المستخدم حالياً (اختياري) */}
+      {q && (
+        <div className="mb-6">
+          <p className="text-text-muted italic">
+            Showing results for: <span className="text-primary font-bold">"{q}"</span>
+          </p>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
         {paginatedProducts.length > 0 ? (
           paginatedProducts.map((product) => (
@@ -67,12 +87,14 @@ export const ProductList = () => {
           ))
         ) : (
           <div className="col-span-full text-center py-20 text-gray-500">
-            No products found in this category.
+            {q 
+              ? `No products match your search "${q}"` 
+              : "No products found in this category."
+            }
           </div>
         )}
       </div>
 
-      {/* Pagination - بيختفي إذا مفيش صفحات */}
       {totalPages > 1 && (
         <div className="mt-10 flex justify-center">
           <Pagination

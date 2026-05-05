@@ -5,8 +5,26 @@ import { AuthService } from "./services/service";
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(() => {
+    if (typeof window !== "undefined") {
+      const savedUser = localStorage.getItem("auth_user");
+      // تأكد من أن البيانات موجودة وصحيحة
+      if (savedUser && savedUser !== "undefined") {
+        try {
+          return JSON.parse(savedUser);
+        } catch { return null; }
+      }
+    }
+    return null;
+  });
+
+  // اجعل التحميل false إذا كان المستخدم موجوداً لتتمكن من العبور فوراً
+  const [isLoading, setIsLoading] = useState(() => {
+    if (typeof window !== "undefined") {
+      return !localStorage.getItem("auth_user"); 
+    }
+    return true;
+  });
 
   useEffect(() => {
     const initAuth = async () => {
@@ -15,38 +33,46 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setIsLoading(false);
         return;
       }
-
       try {
-        // نستخدم getCurrentUser بدل me
         const userData = await AuthService.getCurrentUser(token);
-        setUser(userData);
+        // تحديث البيانات دون المساس بالتوكن الموجود
+        const updatedUser = { ...userData, token }; 
+        localStorage.setItem("auth_user", JSON.stringify(updatedUser));
+        setUser(updatedUser);
       } catch {
-        localStorage.removeItem("auth_token");
-        setUser(null);
+        // لا تخرج المستخدم إلا إذا كان التوكن تالفاً فعلاً
+        // logout(); 
       } finally {
         setIsLoading(false);
       }
     };
     initAuth();
   }, []);
+
   const login = async (u: string, p: string) => {
-  setIsLoading(true); // اختياري: لإظهار اللودر أثناء التحقق
-  try {
-    const userData = await AuthService.login({ username: u, password: p });
-    
-    // تأكد أن الـ userData يحتوي على الـ token، واحفظه فوراً
-    if (userData.token) {
-      localStorage.setItem("auth_token", userData.token);
+    setIsLoading(true);
+    try {
+      const response = await AuthService.login({ username: u, password: p });
+
+     const responseData = response as any; // تجاوز مؤقت للنوع
+if (responseData && (responseData.token || responseData.accessToken)) {
+  const token = responseData.token || responseData.accessToken;
+  localStorage.setItem("auth_token", token);
+  localStorage.setItem("auth_user", JSON.stringify(responseData));
+  setUser(responseData);
+}
+    } catch (error) {
+      throw error;
+    } finally {
+      setIsLoading(false);
     }
-    
-    setUser(userData);
-  } finally {
-    setIsLoading(false);
-  }
-};
+  };
+
+  // ... (logout كما هو)
 
   const logout = () => {
     localStorage.removeItem("auth_token");
+    localStorage.removeItem("auth_user");
     setUser(null);
   };
 
